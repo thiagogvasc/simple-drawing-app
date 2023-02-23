@@ -7,7 +7,6 @@ import * as paper from 'paper'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit {
-  title = 'example1';
   @ViewChild('myCanvas', { static: true }) canvas!: ElementRef
   private ctx: CanvasRenderingContext2D | null = null
 
