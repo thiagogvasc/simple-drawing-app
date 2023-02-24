@@ -9,7 +9,6 @@ export class MouseListener {
   mouseUp = true
   mouseUpPos: paper.Point | null = null
 
-  mouseMove = false
   mouseMovePos: paper.Point | null = null
 
   constructor(element: HTMLCanvasElement) {
@@ -27,7 +26,7 @@ export class MouseListener {
         this.mouseDownPos = new paper.Point(event.offsetX, event.offsetY)
       }
     })
-    
+
     this.element.addEventListener('mouseup', (event: MouseEvent) => {
       this.mouseUp = true
       this.mouseDown = false
