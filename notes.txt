@@ -1,0 +1,2 @@
+1. If size is zero, it becomes immutable because Paperjs treats it as a Point
+2. getItems(inside: rectangle) does not work with negative width

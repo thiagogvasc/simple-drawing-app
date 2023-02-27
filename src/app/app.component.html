@@ -1,6 +1,8 @@
 <div>
-  <h1>My Drawing App</h1>
-  <button mat-button (click)="select()">Select</button>
-  <button mat-button (click)="draw()">Draw</button>
+  <h1>My Drawing App (FPS: {{ drawingEditor && drawingEditor.fps.toFixed(0) }})</h1>
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style" value="draw">
+    <mat-button-toggle value="select" (click)="select()">Select</mat-button-toggle>
+    <mat-button-toggle value="draw" (click)="draw()">Draw</mat-button-toggle>
+  </mat-button-toggle-group>
   <canvas #myCanvas></canvas>
 </div>

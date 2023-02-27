@@ -1,5 +1,9 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import * as paper from 'paper'
+import { DrawingEditor } from './drawing-editor/DrawingEditor';
+import { SelectMouseHandler } from './drawing-editor/mouse-handlers/SelectMouseHandler';
+import { DrawMouseHandler } from './drawing-editor/mouse-handlers/DrawMouseHandler';
+
 
 @Component({
   selector: 'app-root',
@@ -8,15 +12,26 @@ import * as paper from 'paper'
 })
 export class AppComponent implements AfterViewInit {
   @ViewChild('myCanvas', { static: true }) canvas!: ElementRef
-  private ctx: CanvasRenderingContext2D | null = null
+
+  drawingEditor!: DrawingEditor
 
   ngAfterViewInit(): void {
-      const canvasEl: HTMLCanvasElement = this.canvas.nativeElement
-      this.ctx = canvasEl.getContext('2d')
+    const canvasEl: HTMLCanvasElement = this.canvas.nativeElement
+    canvasEl.style.cursor = 'crosshair'
+    canvasEl.width = window.innerWidth 
+    canvasEl.height = window.innerHeight / 1.25
+    canvasEl.style.backgroundColor = 'lightgray'
+    
+    paper.setup(canvasEl)
+    this.drawingEditor = new DrawingEditor()
+    this.drawingEditor.init()
+  }
+  
+  select(): void {
+    this.drawingEditor.mouseHandler = new SelectMouseHandler(this.drawingEditor.mouseCache)
+  }
 
-      paper.setup(canvasEl)
-
-      const circle = new paper.Path.Circle(new paper.Point(100, 100), 50)
-      circle.fillColor = new paper.Color('red')
+  draw(): void {
+    this.drawingEditor.mouseHandler = new DrawMouseHandler(this.drawingEditor.mouseCache)
   }
 }
