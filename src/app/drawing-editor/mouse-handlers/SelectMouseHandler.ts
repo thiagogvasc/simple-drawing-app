@@ -64,6 +64,7 @@ export class SelectMouseHandler implements MouseHandler {
   onMouseDrag(e: paper.MouseEvent): void {
     const { mouseDownPos, mouseDragPos } = this.mouseCache
     
+    // Drag element
     if (this.currElemDragging) {
       this.currElemDragging.position.x = mouseDragPos!.x - (mouseDownPos!.x - this.currElemDraggingStartPos!.x)
       this.currElemDragging.position.y = mouseDragPos!.y - (mouseDownPos!.y - this.currElemDraggingStartPos!.y)
@@ -84,7 +85,7 @@ export class SelectMouseHandler implements MouseHandler {
           rect!.height *= -1
         }
         
-        const items = paper.project.activeLayer.getItems({ overlapping: rect})
+        const items = paper.project.activeLayer.getItems({ overlapping: rect })
         items.forEach(item => {
           item.selected = true
         })
