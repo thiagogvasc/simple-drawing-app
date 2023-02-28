@@ -5,19 +5,23 @@ import { MouseCache } from "./MouseCache";
 export class DrawMouseHandler implements MouseHandler {
   currPath: paper.Path
   mouseCache: MouseCache
+  strokeWidth: number
+  strokeColor: paper.Color
 
-  constructor(mouseCache: MouseCache) {
+  constructor(mouseCache: MouseCache, strokeColor: paper.Color, strokeWidth: number,) {
     this.currPath = new paper.Path()
-    this.currPath.strokeColor = new paper.Color('black')
-    this.currPath.strokeWidth = 2
     this.mouseCache = mouseCache
+    this.strokeWidth = strokeWidth
+    this.strokeColor = strokeColor
+    this.currPath.strokeColor = this.strokeColor
+    this.currPath.strokeWidth = this.strokeWidth
   }
 
   onMouseDown(e: paper.MouseEvent): void {
     const { mouseDownPos } = this.mouseCache
     this.currPath = new paper.Path()
-    this.currPath.strokeColor = new paper.Color('black')
-    this.currPath.strokeWidth = 10
+    this.currPath.strokeColor = this.strokeColor
+    this.currPath.strokeWidth = this.strokeWidth
     console.log(mouseDownPos)
     this.currPath.add(new paper.Point(mouseDownPos!))
   }
@@ -32,6 +36,7 @@ export class DrawMouseHandler implements MouseHandler {
   onMouseDrag(e: paper.MouseEvent): void {
     const { mouseDragPos } = this.mouseCache
     this.currPath.add(new paper.Point(mouseDragPos!))
+    this.currPath.smooth()
   }
 
   onMouseMove(e: paper.MouseEvent): void {}

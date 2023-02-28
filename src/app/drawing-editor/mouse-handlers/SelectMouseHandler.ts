@@ -42,7 +42,9 @@ export class SelectMouseHandler implements MouseHandler {
       segments: true,
       stroke: true,
       fill: true,
-      tolerance: 5
+      tolerance: 5,
+      handles: true,
+      curves: true
     }
 
     const hitResult = paper.project.hitTest(mouseDownPos!, hitOptions)
@@ -103,5 +105,17 @@ export class SelectMouseHandler implements MouseHandler {
   }
 
   onMouseMove(e: paper.MouseEvent): void {}
-  onDoubleClick(e: paper.MouseEvent): void {}
+  onDoubleClick(e: paper.MouseEvent): void {
+    const hitOptions = {
+      segments: true,
+      stroke: true,
+      fill: true,
+      tolerance: 5
+    };
+    const hitResult = paper.project.hitTest(e.point, hitOptions)
+    if (hitResult) {
+       const path = hitResult.item as paper.Path
+       path.fullySelected = true
+    }
+  }
 }

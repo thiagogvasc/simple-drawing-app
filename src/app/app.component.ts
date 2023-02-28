@@ -21,7 +21,7 @@ export class AppComponent implements AfterViewInit {
     canvasEl.width = window.innerWidth 
     canvasEl.height = window.innerHeight / 1.25
     canvasEl.style.backgroundColor = 'lightgray'
-    
+
     paper.setup(canvasEl)
     this.drawingEditor = new DrawingEditor()
     this.drawingEditor.init()
@@ -32,6 +32,17 @@ export class AppComponent implements AfterViewInit {
   }
 
   draw(): void {
-    this.drawingEditor.mouseHandler = new DrawMouseHandler(this.drawingEditor.mouseCache)
+    this.drawingEditor.mouseHandler = new DrawMouseHandler(this.drawingEditor.mouseCache, this.drawingEditor.strokeColor, this.drawingEditor.strokeWidth)
+  }
+
+  setStrokeColor(e: Event): void {
+    const target = e.target as HTMLInputElement
+    this.drawingEditor.strokeColor = new paper.Color(target.value)
+  }
+
+  setStrokeWidth(e: Event): void {
+    const target = e.target as HTMLInputElement
+    console.log(this.drawingEditor)
+    this.drawingEditor.strokeWidth = parseInt(target.value)
   }
 }
