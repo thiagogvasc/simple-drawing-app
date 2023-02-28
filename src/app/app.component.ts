@@ -3,6 +3,7 @@ import * as paper from 'paper'
 import { DrawingEditor } from './drawing-editor/DrawingEditor';
 import { SelectMouseHandler } from './drawing-editor/mouse-handlers/SelectMouseHandler';
 import { DrawMouseHandler } from './drawing-editor/mouse-handlers/DrawMouseHandler';
+import { DrawOptions } from './drawing-editor/mouse-handlers/options/DrawOptions';
 
 
 @Component({
@@ -14,6 +15,7 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('myCanvas', { static: true }) canvas!: ElementRef
 
   drawingEditor!: DrawingEditor
+  drawOptions: DrawOptions = new DrawOptions(2, new paper.Color('black'))
 
   ngAfterViewInit(): void {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement
@@ -24,6 +26,7 @@ export class AppComponent implements AfterViewInit {
 
     paper.setup(canvasEl)
     this.drawingEditor = new DrawingEditor()
+    this.drawingEditor.mouseHandler = new DrawMouseHandler(this.drawingEditor.mouseCache, this.drawOptions)
     this.drawingEditor.init()
   }
   
@@ -32,17 +35,17 @@ export class AppComponent implements AfterViewInit {
   }
 
   draw(): void {
-    this.drawingEditor.mouseHandler = new DrawMouseHandler(this.drawingEditor.mouseCache, this.drawingEditor.strokeColor, this.drawingEditor.strokeWidth)
+    this.drawingEditor.mouseHandler = new DrawMouseHandler(this.drawingEditor.mouseCache, this.drawOptions)
   }
 
   setStrokeColor(e: Event): void {
     const target = e.target as HTMLInputElement
-    this.drawingEditor.strokeColor = new paper.Color(target.value)
+    this.drawOptions.strokeColor = new paper.Color(target.value)
   }
 
   setStrokeWidth(e: Event): void {
     const target = e.target as HTMLInputElement
-    console.log(this.drawingEditor)
-    this.drawingEditor.strokeWidth = parseInt(target.value)
+    console.log(target.value)
+    this.drawOptions.strokeWidth = parseInt(target.value)
   }
 }

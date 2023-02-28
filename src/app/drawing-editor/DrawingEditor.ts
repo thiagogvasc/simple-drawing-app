@@ -5,10 +5,8 @@ import { MouseHandler } from "./mouse-handlers/mouse-handlers.types";
 
 export class DrawingEditor {
 
-  strokeWidth = 2
-  strokeColor = new paper.Color('000')
   mouseCache: MouseCache = new MouseCache()
-  mouseHandler: MouseHandler = new DrawMouseHandler(this.mouseCache, this.strokeColor, this.strokeWidth)
+  mouseHandler!: MouseHandler
 
   lastTime = 0
   fps = 0
