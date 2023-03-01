@@ -18,15 +18,13 @@ export class DrawMouseHandler implements MouseHandler {
     this.currPath = new paper.Path()
     this.currPath.strokeColor = this.drawOptions.strokeColor
     this.currPath.strokeWidth = this.drawOptions.strokeWidth
-    console.log(mouseDownPos)
     this.currPath.add(new paper.Point(mouseDownPos!))
   }
 
   onMouseUp(e: paper.MouseEvent): void {
     this.currPath.simplify()
+    paper.project.deselectAll()
     this.currPath.selected = true
-    console.log(paper.project.activeLayer)
-    console.log(this.currPath)
   }
 
   onMouseDrag(e: paper.MouseEvent): void {
