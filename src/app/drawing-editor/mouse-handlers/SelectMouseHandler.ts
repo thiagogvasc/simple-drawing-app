@@ -5,8 +5,11 @@ import * as paper from 'paper'
 export class SelectMouseHandler implements MouseHandler { 
 
   // Handle drag
-  currElemDragging: paper.Item | null = null
+  currElemDragging: paper.Path | null = null
   currElemDraggingStartPos: paper.Point | null = null
+  currSegmentDragging: paper.Segment | null = null
+  currSegmentDraggingStartPos: paper.Point | null = null
+  lastHitResult: paper.HitResult | null = null
 
   // Handle selection rectangle
   selectionRectangle: paper.Rectangle | null = null
@@ -48,9 +51,19 @@ export class SelectMouseHandler implements MouseHandler {
     }
 
     const hitResult = paper.project.hitTest(mouseDownPos!, hitOptions)
+    this.lastHitResult = hitResult
+    console.log(hitResult)
     if (hitResult && hitResult.item.selected) {
-      this.currElemDragging = hitResult.item
-      this.currElemDraggingStartPos = this.currElemDragging.position
+      this.currElemDragging = hitResult.item as paper.Path
+      this.currElemDraggingStartPos = this.currElemDragging!.position
+
+      // For dragging segments
+      if (this.currElemDragging.fullySelected) {
+        if (hitResult.type === 'segment' || 'handle-in' || 'handle-out') {
+          this.currSegmentDragging = hitResult.segment
+          this.currSegmentDraggingStartPos = new paper.Point(hitResult.point)
+        }
+      }
     }
 
     if (!hitResult) {
@@ -63,11 +76,24 @@ export class SelectMouseHandler implements MouseHandler {
 
   onMouseDrag(e: paper.MouseEvent): void {
     const { mouseDownPos, mouseDragPos } = this.mouseCache
-    
+    console.log(this.currElemDragging)
     // Drag element
     if (this.currElemDragging) {
-      this.currElemDragging.position.x = mouseDragPos!.x - (mouseDownPos!.x - this.currElemDraggingStartPos!.x)
-      this.currElemDragging.position.y = mouseDragPos!.y - (mouseDownPos!.y - this.currElemDraggingStartPos!.y)
+      if (this.currSegmentDragging) {
+        if (this.lastHitResult!.type === 'segment') {
+          this.currSegmentDragging.point.x = mouseDragPos!.x 
+          this.currSegmentDragging.point.y = mouseDragPos!.y
+        } else if (this.lastHitResult!.type === 'handle-out') {
+          this.currSegmentDragging.handleOut.x = mouseDragPos!.x - this.currSegmentDragging.point.x
+          this.currSegmentDragging.handleOut.y = mouseDragPos!.y - this.currSegmentDragging.point.y
+        } else if (this.lastHitResult!.type === 'handle-in') {
+          this.currSegmentDragging.handleIn.x = mouseDragPos!.x - this.currSegmentDragging.point.x
+          this.currSegmentDragging.handleIn.y = mouseDragPos!.y - this.currSegmentDragging.point.y
+        }
+      } else {
+        this.currElemDragging.position.x = mouseDragPos!.x - (mouseDownPos!.x - this.currElemDraggingStartPos!.x)
+        this.currElemDragging.position.y = mouseDragPos!.y - (mouseDownPos!.y - this.currElemDraggingStartPos!.y)
+      }
     } else {
       // Drag rectangle to select multiple items
       const size = new paper.Size(mouseDragPos!.x - mouseDownPos!.x, mouseDragPos!.y - mouseDownPos!.y)
@@ -98,10 +124,13 @@ export class SelectMouseHandler implements MouseHandler {
   onMouseUp(e: paper.MouseEvent): void {
     this.currElemDragging = null
     this.currElemDraggingStartPos = null
+    this.currSegmentDragging = null
+    this.currSegmentDraggingStartPos = null
 
     this.selectionRectangle = null
     this.selectionRectanglePath?.remove()
     this.selectionRectanglePath = null
+
 
   }
 
