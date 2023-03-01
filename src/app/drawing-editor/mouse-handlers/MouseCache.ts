@@ -13,7 +13,6 @@ export class MouseCache implements MouseHandler {
   mouseDragPos: paper.Point | null = null
 
   onMouseDown(e: paper.MouseEvent): void {
-    console.log(e)
     this.mouseDown = true
     this.mouseUp = false
     if (this.mouseDownPos) {
@@ -48,10 +47,7 @@ export class MouseCache implements MouseHandler {
       this.mouseDragPos = new paper.Point(e.point)
     }
   }
-  onClick(e: paper.MouseEvent): void {
-    //throw new Error('Method not implemented.')
-  }
-  onDoubleClick(e: paper.MouseEvent): void {
-    //throw new Error('Method not implemented.')
-  }
+  
+  onClick(e: paper.MouseEvent): void { }
+  onDoubleClick(e: paper.MouseEvent): void { }
 }
