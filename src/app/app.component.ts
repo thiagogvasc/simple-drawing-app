@@ -4,6 +4,8 @@ import { DrawingEditor } from './drawing-editor/DrawingEditor';
 import { SelectMouseHandler } from './drawing-editor/mouse-handlers/SelectMouseHandler';
 import { DrawMouseHandler } from './drawing-editor/mouse-handlers/DrawMouseHandler';
 import { DrawOptions } from './drawing-editor/mouse-handlers/options/DrawOptions';
+import { LineMouseHandler } from './drawing-editor/mouse-handlers/LineMouseHandler';
+import { RectangleMouseHandler } from './drawing-editor/mouse-handlers/RectangleMouseHandler';
 
 
 @Component({
@@ -36,6 +38,14 @@ export class AppComponent implements AfterViewInit {
 
   draw(): void {
     this.drawingEditor.mouseHandler = new DrawMouseHandler(this.drawingEditor.mouseCache, this.drawOptions)
+  }
+
+  line(): void {
+    this.drawingEditor.mouseHandler = new LineMouseHandler(this.drawingEditor.mouseCache, this.drawOptions)
+  }
+
+  rectangle(): void {
+    this.drawingEditor.mouseHandler = new RectangleMouseHandler(this.drawingEditor.mouseCache, this.drawOptions)
   }
 
   setStrokeColor(e: Event): void {
