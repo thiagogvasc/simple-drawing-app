@@ -15,6 +15,8 @@ export class SelectMouseHandler implements MouseHandler {
   selectionRectangle: paper.Rectangle | null = null
   selectionRectanglePath: paper.Path.Rectangle | null = null
 
+  selectionGroup: paper.Group = new paper.Group()
+
   mouseCache: MouseCache
 
   constructor(mouseCache: MouseCache) {
@@ -30,11 +32,15 @@ export class SelectMouseHandler implements MouseHandler {
       fill: true,
       tolerance: 5
     };
+    
     const hitResult = paper.project.hitTest(mouseDownPos!, hitOptions)
     if (!hitResult) {
       paper.project.deselectAll()
     } else {
+      !hitResult.item.selected && !e.modifiers.control && paper.project.deselectAll()
       hitResult.item.selected = !hitResult.item.selected
+      //this.selectionGroup.removeChildren()
+      //this.selectionGroup.addChildren(paper.project.selectedItems)
     }
   }
 
@@ -76,7 +82,7 @@ export class SelectMouseHandler implements MouseHandler {
 
   onMouseDrag(e: paper.MouseEvent): void {
     const { mouseDownPos, mouseDragPos } = this.mouseCache
-    console.log(this.currElemDragging)
+    
     // Drag element
     if (this.currElemDragging) {
       if (this.currSegmentDragging) {
@@ -93,6 +99,8 @@ export class SelectMouseHandler implements MouseHandler {
       } else {
         this.currElemDragging.position.x = mouseDragPos!.x - (mouseDownPos!.x - this.currElemDraggingStartPos!.x)
         this.currElemDragging.position.y = mouseDragPos!.y - (mouseDownPos!.y - this.currElemDraggingStartPos!.y)
+        //this.selectionGroup.position.x = mouseDragPos!.x
+        //this.selectionGroup.position.y = mouseDragPos!.y
       }
     } else {
       // Drag rectangle to select multiple items
@@ -115,6 +123,9 @@ export class SelectMouseHandler implements MouseHandler {
         items.forEach(item => {
           item.selected = true
         })
+        console.log(paper.project.selectedItems)
+        //this.selectionGroup.removeChildren()
+        //this.selectionGroup.addChildren(paper.project.selectedItems)
       }
       
       this.selectionRectanglePath!.selected = true
@@ -130,8 +141,6 @@ export class SelectMouseHandler implements MouseHandler {
     this.selectionRectangle = null
     this.selectionRectanglePath?.remove()
     this.selectionRectanglePath = null
-
-
   }
 
   onMouseMove(e: paper.MouseEvent): void {}
