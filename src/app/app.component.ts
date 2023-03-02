@@ -51,11 +51,17 @@ export class AppComponent implements AfterViewInit {
   setStrokeColor(e: Event): void {
     const target = e.target as HTMLInputElement
     this.drawOptions.strokeColor = new paper.Color(target.value)
+    paper.project.selectedItems.forEach(item => {
+      item.strokeColor = this.drawOptions.strokeColor
+    })
   }
 
   setStrokeWidth(e: Event): void {
     const target = e.target as HTMLInputElement
     console.log(target.value)
     this.drawOptions.strokeWidth = parseInt(target.value)
+    paper.project.selectedItems.forEach(item => {
+      item.strokeWidth = this.drawOptions.strokeWidth
+    })
   }
 }
